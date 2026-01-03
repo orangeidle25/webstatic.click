@@ -1,104 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QADS.cloud Static Services</title>
-<style>
-    :root {
-        --bg: #0a0a0a;
-        --card: #111111;
-        --accent: #d3d3d3;
-        --text-main: #ffffff;
-        --text-dim: #a1a1aa;
-        --border: #27272a;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebStatic.click | Static Hosting & CDN</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0a0a0a; 
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
 
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: var(--bg);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        font-family: 'Inter', -apple-system, system-ui, sans-serif;
-        color: var(--text-main);
-        line-height: 1.6;
-    }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
 
-    .container {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 60px 40px;
-        max-width: 600px;
-        width: 90%;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        text-align: center;
-    }
+        .logo-container {
+            margin-bottom: 40px;
+        }
 
-    .badge {
-        display: inline-block;
-        padding: 6px 12px;
-        background: rgba(66, 66, 66, 0.1);
-        color: var(--accent);
-        border-radius: 100px;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        margin-bottom: 24px;
-    }
+        #spinning-logo {
+            width: 190px;
+            height: 190px;
+            object-fit: contain;
+            animation: spin 8s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+            transition: animation-duration 0.5s ease;
+        }
 
-    .main-title {
-        font-size: 32px;
-        font-weight: 800;
-        margin: 0 0 20px 0;
-        letter-spacing: -0.02em;
-        background: linear-gradient(to bottom, #fff, #a1a1aa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-    .content-text {
-        color: var(--text-dim);
-        font-size: 17px;
-        margin-bottom: 32px;
-        text-wrap: balance;
-    }
+        h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to bottom, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .footer-note {
-        font-size: 14px;
-        color: #52525b;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
+        p {
+            font-size: 1.15rem;
+            color: #999; 
+            max-width: 500px;
+            line-height: 1.6;
+            margin: 15px auto 0;
+        }
 
-    .status-dot {
-        height: 8px;
-        width: 8px;
-        background-color: #22c55e;
-        border-radius: 50%;
-        display: inline-block;
-        box-shadow: 0 0 10px #22c55e;
-    }
-</style>
+        .highlight {
+            color: #ffffff;
+            border-bottom: 1px solid #333;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="badge">webstatic.click</div>
-    <h1 class="main-title">Global Edge Infrastructure</h1>
-    <p class="content-text">
-        Hosted by QADS.cloud, this site provides static and CDN services to power multiple digital platforms. Static hosting stores pre-built files like images and text, delivering them instantly to your browser without the need for complex processing. To ensure global speed, our Content Delivery Network (CDN) distributes these files across a worldwide network of servers so they load from the location closest to you. Together, these technologies minimize lag and ensure the site remains fast and reliable for every visitor.
-    </p>
-    <div class="footer-note">
-        <span class="status-dot"></span>
-        All Systems Operational <a href="https://app.qads.cloud/status" class="footer-note">See QADS.cloud status</a>
-    </div>
-</div>
+    <div class="container">
+        <div class="logo-container">
+            <img id="spinning-logo" src="https://static.qads.cloud/cdn/logo.png" alt="WebStatic Logo">
+        </div>
 
+        <h1>webstatic.click</h1>
+        <p id="description">
+            Powering over <span class="highlight">30,000+</span> web experiences worldwide with high-performance static hosting and a global, edge-optimized CDN—at zero cost.
+        </p>
+    </div>
 </body>
 </html>
