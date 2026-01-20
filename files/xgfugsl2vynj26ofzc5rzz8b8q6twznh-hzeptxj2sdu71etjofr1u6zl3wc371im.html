@@ -1,0 +1,716 @@
+<!-- xgfugsl2vynj26ofzc5rzz8b8q6twznh-hzeptxj2sdu71etjofr1u6zl3wc371im.html -->
+<!-- Webstatic Content Loaded Successfully -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probe</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg: #fff;
+            --txt: #000;
+            --ai-bg: #f4f4f4;
+            --usr-bg: #000;
+            --usr-txt: #fff;
+            --in-bg: #fff;
+            --c1: #BC82F3;
+            --c2: #F5B9EA;
+            --c3: #8D9FFF;
+            --c4: #FF6778;
+            --c5: #FFBA71;
+            --c6: #C686FF;
+        }
+
+        body {
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+
+        }
+
+        #chat-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            transition: transform 0.3s ease;
+            pointer-events: auto;
+        }
+
+        #chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        #chat-toggle svg {
+            color: white;
+            width: 30px;
+            height: 30px;
+        }
+
+        #container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            max-width: 90vw;
+            height: 600px;
+            max-height: 80vh;
+            background: var(--bg);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 9998;
+            pointer-events: auto;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transform-origin: bottom right;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        #container.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            visibility: visible;
+        }
+
+        #header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 10px;
+        }
+
+        #header img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        #header span {
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: -.5px;
+        }
+
+        #close-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        #close-btn:hover {
+            opacity: 1;
+        }
+
+        #chat-history {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px 5px;
+            scrollbar-width: thin;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            font-size: 15px;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: slideIn .4s forwards ease-out;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-message {
+            background: var(--ai-bg);
+            color: #000;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background: var(--usr-bg);
+            color: var(--usr-txt);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+            opacity: .4;
+            align-items: center;
+            height: 20px;
+            transition: opacity .2s;
+        }
+
+        .feedback-actions:hover {
+            opacity: 1;
+        }
+
+        .feedback-actions button {
+            background: 0 0;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            color: #000;
+            transition: transform .2s;
+        }
+
+        .feedback-actions button:hover {
+            transform: scale(1.2);
+        }
+
+        .book-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all .2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .book-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .mini-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin: 4px 4px 4px 0;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .mini-link-btn:hover {
+            background: #f4f4f4;
+            transform: translateY(-1px);
+        }
+
+        #input-wrapper {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            z-index: 100;
+        }
+
+        .glow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 55px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .5s ease;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .glow-blur-1 {
+            filter: blur(4px);
+            z-index: -1;
+            transform: scale(1.02, 1.1);
+        }
+
+        .glow-blur-2 {
+            filter: blur(8px);
+            z-index: -2;
+            transform: scale(1.05, 1.2);
+        }
+
+        .glow-blur-3 {
+            filter: blur(12px);
+            z-index: -3;
+            transform: scale(1.08, 1.3);
+        }
+
+        .glow-spinner {
+            position: absolute;
+            width: 200%;
+            aspect-ratio: 1/1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6), var(--c1));
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        #input-area {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--in-bg);
+            border-radius: 55px;
+            display: flex;
+            align-items: center;
+            z-index: 20;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            flex: 1;
+            background: 0 0;
+            border: none;
+            color: var(--txt);
+            font-size: 15px;
+            padding: 0 20px;
+            outline: 0;
+            height: 100%;
+            border-radius: 55px;
+        }
+
+        #send-btn {
+            background: #000;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 6px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .2s;
+        }
+
+        #send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .disclaimer {
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: var(--ai-bg);
+            border-radius: 20px;
+            width: fit-content;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: slideIn .3s forwards;
+        }
+
+        .dot {
+            width: 5px;
+            height: 5px;
+            background: #999;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100%,
+            80% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="chat-toggle">
+        <img width="26" height="26" src="https://img.icons8.com/ios11/512/FFFFFF/bard.png" alt="Chat">
+    </div>
+
+    <div id="container">
+        <div id="header">
+            <img src="https://static.wixstatic.com/media/4101ec_b470f041789d4f759f36300f13f6bbd7%7Emv2.png/v1/fill/w_192%2Ch_192%2Clg_1%2Cusm_0.66_1.00_0.01/4101ec_b470f041789d4f759f36300f13f6bbd7%7Emv2.png"
+                alt="Logo">
+            <span>La Maison Blanche</span>
+            <button id="close-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div id="chat-history"></div>
+
+        <div id="input-wrapper">
+            <div class="glow-container glow-blur-3">
+                <div class="glow-spinner"></div>
+            </div>
+            <div class="glow-container glow-blur-2">
+                <div class="glow-spinner"></div>
+            </div>
+            <div class="glow-container glow-blur-1">
+                <div class="glow-spinner"></div>
+            </div>
+            <div class="glow-container" style="z-index: 10; margin: -1px; opacity: 0;">
+                <div class="glow-spinner"></div>
+            </div>
+
+            <div id="input-area">
+                <input type="text" id="user-input" placeholder="Ask / Demander...">
+                <button id="send-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="disclaimer">AI can make mistakes. Check important info.</div>
+    </div>
+
+    <script>
+        const chatHistory = document.getElementById('chat-history');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const toggleBtn = document.getElementById('chat-toggle');
+        const closeBtn = document.getElementById('close-btn');
+        const container = document.getElementById('container');
+        const glowContainers = document.querySelectorAll('.glow-container');
+
+
+        const ICAL_URL = 'https://corsproxy.io/?' + encodeURIComponent('https://www.lodgify.com/3bf17184-ad17-49aa-ac49-761643c4d702.ics');
+        const API_KEY = 'AIzaSyA5RxvJAI1XcsKRTC491dlBllmrmurDvzE';
+
+        const HOUSE_INFO = `
+        You are the helpful AI for "La Maison Blanche", a rental house in Ile d'Orléans, QC.
+        FACTS:
+        - Phone: 514-994-2080
+        - Email: info@lamaisonblanche.ca
+        - WhatsApp: +1 (514) 994-2080
+        - Rules: No dogs allowed (except service dogs). Small parties only.
+        - Check-in: 4:00 PM. Check-out: 11:00 AM.
+        - Links: /contact, /terms, /privacy, /cookies.
+        - Interactive map to explore the house available at https://www-lamaisonblanche-ca.filesusr.com/html/4101ec_d6981942be9d85d76ac7196f3dd61daa.html
+        - Crawl the site https://lamaisonblanche.ca if you can for more
+        
+        INSTRUCTIONS:
+        1. If the user wants to BOOK dates, output strictly: ACTION_BOOKING_START, however, while there, if he asks for something like contact information, you can still give it. But dont pause the booking process.
+        2. If the user asks a question, answer efficiently based on FACTS.
+        3. Never make up information. NEVER. If unknown, say "Please contact us directly."
+        4. Detect language (French/English/Spanish) and reply in that language.
+        5. If the user asks for a price, output strictly that we range between C$275/night and C$350/night on our own site, but to check for their dates.
+        6. You are allowed to give multiple messages in a row, but make sure it's right.
+        `;
+
+        let unavailableRanges = [];
+        let chatState = 'GENERAL';
+        let bookingData = { adults: 0, kids: 0, startDate: null, endDate: null, lang: 'en' };
+        let isChatOpen = false;
+
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                container.classList.add('open');
+                gsap.fromTo("#chat-toggle", { scale: 1 }, { scale: 0, duration: 0.2 });
+                window.parent.postMessage({ type: 'chat-resize', open: true }, '*');
+                if (chatHistory.children.length === 0) {
+                    setTimeout(() => addMessage("Bonjour! Je peux vous aider à réserver ou répondre à vos questions.<br><br>Hello! I can help you book or answer your questions.<br><br>¡Hola! Puedo ayudarte a reservar o responder preguntas.", 'ai'), 300);
+                }
+            } else {
+                container.classList.remove('open');
+                gsap.to("#chat-toggle", { scale: 1, duration: 0.3, delay: 0.2 });
+                setTimeout(() => {
+                    window.parent.postMessage({ type: 'chat-resize', open: false }, '*');
+                }, 400);
+            }
+        }
+
+        toggleBtn.addEventListener('click', toggleChat);
+        closeBtn.addEventListener('click', toggleChat);
+
+        function toggleGlow(active) {
+            glowContainers.forEach((layer, index) => {
+                let op = 0;
+                if (active) {
+                    if (index === 3) op = 1;
+                    if (index === 2) op = 0.7;
+                    if (index === 1) op = 0.5;
+                    if (index === 0) op = 0.3;
+                }
+                layer.style.opacity = op;
+            });
+        }
+        userInput.addEventListener('focus', () => toggleGlow(true));
+        userInput.addEventListener('blur', () => { if (!userInput.value) toggleGlow(false); });
+
+        function parseLinks(text) {
+
+            let processed = text.replace(/\/contact/g, '<a href="/contact" class="mini-link-btn" target="_parent">Contact</a>');
+            processed = processed.replace(/\/terms/g, '<a href="/terms" class="mini-link-btn" target="_parent">Terms</a>');
+            processed = processed.replace(/\/privacy/g, '<a href="/privacy" class="mini-link-btn" target="_parent">Privacy</a>');
+            processed = processed.replace(/\/cookies/g, '<a href="/cookies" class="mini-link-btn" target="_parent">Cookies</a>');
+
+
+            processed = processed.replace(/5149942080/g, '<a href="tel:5149942080" class="mini-link-btn">514-994-2080</a>');
+
+
+            processed = processed.replace(/info@lamaisonblanche\.ca/g, '<a href="mailto:info@lamaisonblanche.ca" class="mini-link-btn">info@lamaisonblanche.ca</a>');
+
+
+            processed = processed.replace(/whatsapp: \+1 514 994 2080/gi, '<a href="https://wa.me/15149942080" target="_blank" class="mini-link-btn">WhatsApp</a>');
+
+            return processed;
+        }
+
+        function createFeedback() {
+            return `<div class="feedback-actions"><button class="up-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button><button class="down-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button></div>`;
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}-message`;
+            div.innerHTML = parseLinks(text);
+            if (sender === 'ai') div.innerHTML += createFeedback();
+            chatHistory.appendChild(div);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function showTyping() {
+            const div = document.createElement('div');
+            div.className = 'typing-indicator';
+            div.id = 'typing';
+            div.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            chatHistory.appendChild(div);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        function addBookingButton(url, label) {
+            const btn = document.createElement('a');
+            btn.href = url;
+            btn.className = 'book-btn';
+            btn.target = "_parent";
+            btn.innerText = label;
+            const div = document.createElement('div');
+            div.className = 'message ai-message';
+            div.style.background = 'transparent'; div.style.padding = '0';
+            div.appendChild(btn);
+            chatHistory.appendChild(div);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        async function fetchUnavailableDates() {
+            try {
+                const response = await fetch(ICAL_URL);
+                const data = await response.text();
+                const events = data.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || [];
+                unavailableRanges = events.map(event => {
+                    const startMatch = event.match(/DTSTART;VALUE=DATE:(\d{8})/);
+                    const endMatch = event.match(/DTEND;VALUE=DATE:(\d{8})/);
+                    if (startMatch && endMatch) {
+                        return { start: parseICalDate(startMatch[1]), end: parseICalDate(endMatch[1]) };
+                    }
+                    return null;
+                }).filter(r => r);
+            } catch (e) { console.error("Cal Error", e); }
+        }
+
+        function parseICalDate(str) {
+            const y = str.substring(0, 4), m = str.substring(4, 6), d = str.substring(6, 8);
+            return new Date(`${y}-${m}-${d}T00:00:00`);
+        }
+
+        async function callGemini(prompt) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (e) { return null; }
+        }
+
+        async function handleLogic(input) {
+            const today = new Date();
+
+            if (chatState === 'GENERAL') {
+                const prompt = `${HOUSE_INFO}\nUser Input: "${input}"\nRespond directly to user.`;
+                const aiResponse = await callGemini(prompt);
+
+                if (aiResponse && aiResponse.includes('ACTION_BOOKING_START')) {
+                    chatState = 'BOOKING_GUESTS';
+                    bookingData.lang = input.toLowerCase().match(/bonjour|salut|réserver|francais/) ? 'fr' : 'en';
+                    return bookingData.lang === 'fr' ? "Bienvenue. Pour combien de personnes voulez-vous réserver ?" : "Welcome. How many guests is this for?";
+                }
+
+                return aiResponse;
+            }
+
+            if (chatState === 'BOOKING_GUESTS') {
+                const prompt = `Task: Extract adults/kids from "${input}". 
+                Context: Booking. "people/gens" = adults. "bébé/baby" = kids. Output JSON: {"adults": number, "kids": number}. If invalid, null.`;
+                const jsonStr = await callGemini(prompt);
+                let data;
+                try { data = JSON.parse(jsonStr.replace(/```json|```/g, '').trim()); } catch (e) { }
+
+                if (!data || (data.adults === undefined && data.kids === undefined)) {
+                    return bookingData.lang === 'fr' ? "Je n'ai pas compris. Combien d'adultes et d'enfants ?" : "I didn't catch that. How many adults and children?";
+                }
+
+                bookingData.adults = data.adults || 0;
+                bookingData.kids = data.kids || 0;
+                if (bookingData.adults < 1) return bookingData.lang === 'fr' ? "Il faut au moins un adulte." : "We require at least one adult.";
+                if ((bookingData.adults + bookingData.kids) > 8) return bookingData.lang === 'fr' ? "Maximum 8 invités." : "Max 8 guests allowed.";
+
+                chatState = 'BOOKING_DATES';
+                return bookingData.lang === 'fr' ? "C'est noté. Quelles sont vos dates ?" : "Noted. What dates are you looking for?";
+            }
+
+            if (chatState === 'BOOKING_DATES') {
+                const prompt = `Today: ${today.toISOString().split('T')[0]}. User Input: "${input}"
+                Task: Extract Dates. Return JSON: {"startDate": "YYYY-MM-DD", "endDate": "YYYY-MM-DD"}. 
+                Assume future dates. If unclear return {"error": true}.`;
+
+                const jsonStr = await callGemini(prompt);
+                let dates;
+                try { dates = JSON.parse(jsonStr.replace(/```json|```/g, '').trim()); } catch (e) { }
+
+                if (!dates || dates.error || !dates.startDate || !dates.endDate) {
+                    return bookingData.lang === 'fr' ? "Veuillez préciser l'arrivée et le départ (ex: 20 au 22 dec)." : "Please specify check-in and check-out dates (e.g., Dec 20 to 22).";
+                }
+
+                const start = new Date(dates.startDate + 'T00:00:00');
+                const end = new Date(dates.endDate + 'T00:00:00');
+
+                if (end <= start) return bookingData.lang === 'fr' ? "La date de départ doit être après l'arrivée." : "Check-out must be after check-in.";
+
+                if (checkAvailability(start, end)) {
+                    const redirectUrl = `https://secure-book.lamaisonblanche.ca/?ref=chat&arrivalDate=${dates.startDate}&departureDate=${dates.endDate}&adults=${bookingData.adults}&kids=${bookingData.kids}&lang=${bookingData.lang}`;
+                    const msg = bookingData.lang === 'fr' ? `Ces dates sont disponibles !` : `Those dates are available!`;
+                    setTimeout(() => addBookingButton(redirectUrl, bookingData.lang === 'fr' ? "Réserver maintenant" : "Book Now"), 500);
+                    chatState = 'GENERAL';
+                    return msg;
+                } else {
+                    return bookingData.lang === 'fr' ? "Désolé, ces dates sont prises. D'autres dates ?" : "Sorry, those dates are booked. Any other dates?";
+                }
+            }
+        }
+
+        function checkAvailability(reqStart, reqEnd) {
+            for (let range of unavailableRanges) {
+                if ((reqStart < range.end) && (reqEnd > range.start)) return false;
+            }
+            return true;
+        }
+
+        async function processInput() {
+            const text = userInput.value;
+            if (!text) return;
+
+            addMessage(text, 'user');
+            userInput.value = '';
+
+            gsap.to("#input-area", { scale: 0.98, duration: 0.1, yoyo: true, repeat: 1 });
+            toggleGlow(true);
+            showTyping();
+
+            const response = await handleLogic(text);
+            removeTyping();
+            addMessage(response, 'ai');
+            toggleGlow(false);
+        }
+
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') processInput(); });
+        sendBtn.addEventListener('click', processInput);
+        fetchUnavailableDates();
+    </script>
+</body>
+
+</html>
