@@ -461,12 +461,12 @@
         const HOUSE_INFO = `
         You are the helpful AI for "La Maison Blanche", a rental house in Ile d'Orléans, QC.
         FACTS:
-        - Phone: 514-994-2080
+        - Phone: 5149942080
         - Email: info@lamaisonblanche.ca
-        - WhatsApp: +1 (514) 994-2080
+        - WhatsApp: +1 514 994 2080
         - Rules: No dogs allowed (except service dogs). Small parties only.
         - Check-in: 4:00 PM. Check-out: 11:00 AM.
-        - Links: https://lamaisonblanche.ca/contact, https://lamaisonblanche.ca/terms, https://lamaisonblanche.ca/privacy, https://lamaisonblanche.ca/cookies.
+        - Links: /contact, /terms, /privacy, /cookies.
         - Interactive map to explore the house available at https://www-lamaisonblanche-ca.filesusr.com/html/4101ec_d6981942be9d85d76ac7196f3dd61daa.html
         - Crawl the site https://lamaisonblanche.ca if you can for more
         
@@ -522,10 +522,10 @@
 
         function parseLinks(text) {
 
-            let processed = text.replace(/\/contact/g, '<a href="/contact" class="mini-link-btn" target="_parent">Contact</a>');
-            processed = processed.replace(/\/terms/g, '<a href="/terms" class="mini-link-btn" target="_parent">Terms</a>');
-            processed = processed.replace(/\/privacy/g, '<a href="/privacy" class="mini-link-btn" target="_parent">Privacy</a>');
-            processed = processed.replace(/\/cookies/g, '<a href="/cookies" class="mini-link-btn" target="_parent">Cookies</a>');
+            let processed = text.replace(/\/contact/g, '<a href="https://lamaisonblanche.ca/contact" class="mini-link-btn" target="_parent">Contact</a>');
+            processed = processed.replace(/\/terms/g, '<a href="https://lamaisonblanche.ca/terms" class="mini-link-btn" target="_parent">Terms</a>');
+            processed = processed.replace(/\/privacy/g, '<a href="https://lamaisonblanche.ca/privacy" class="mini-link-btn" target="_parent">Privacy</a>');
+            processed = processed.replace(/\/cookies/g, '<a href="https://lamaisonblanche.ca/cookies" class="mini-link-btn" target="_parent">Cookies</a>');
 
 
             processed = processed.replace(/5149942080/g, '<a href="tel:5149942080" class="mini-link-btn">514-994-2080</a>');
