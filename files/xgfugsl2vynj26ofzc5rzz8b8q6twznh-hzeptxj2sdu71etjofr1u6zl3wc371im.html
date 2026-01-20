@@ -14,12 +14,6 @@
             --usr-bg: #000;
             --usr-txt: #fff;
             --in-bg: #fff;
-            --c1: #BC82F3;
-            --c2: #F5B9EA;
-            --c3: #8D9FFF;
-            --c4: #FF6778;
-            --c5: #FFBA71;
-            --c6: #C686FF;
         }
 
         body {
@@ -248,59 +242,6 @@
             z-index: 100;
         }
 
-        .glow-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 55px;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity .5s ease;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .glow-blur-1 {
-            filter: blur(4px);
-            z-index: -1;
-            transform: scale(1.02, 1.1);
-        }
-
-        .glow-blur-2 {
-            filter: blur(8px);
-            z-index: -2;
-            transform: scale(1.05, 1.2);
-        }
-
-        .glow-blur-3 {
-            filter: blur(12px);
-            z-index: -3;
-            transform: scale(1.08, 1.3);
-        }
-
-        .glow-spinner {
-            position: absolute;
-            width: 200%;
-            aspect-ratio: 1/1;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: conic-gradient(from 0deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c6), var(--c1));
-            animation: spin 4s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-
-            to {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
-        }
-
         #input-area {
             position: relative;
             width: 100%;
@@ -354,42 +295,33 @@
 
         .typing-indicator {
             display: flex;
+            align-items: center;
             gap: 4px;
             padding: 12px 16px;
-            background: var(--ai-bg);
-            border-radius: 20px;
             width: fit-content;
             margin-bottom: 10px;
             opacity: 0;
             animation: slideIn .3s forwards;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
         }
 
-        .dot {
-            width: 5px;
-            height: 5px;
-            background: #999;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out;
+        .pulse-text {
+            animation: pulse 1.5s infinite ease-in-out;
         }
 
-        .dot:nth-child(1) {
-            animation-delay: -.32s;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: -.16s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            100%,
-            80% {
-                transform: scale(0);
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
             }
 
-            40% {
-                transform: scale(1);
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.3;
             }
         }
     </style>
@@ -418,19 +350,6 @@
         <div id="chat-history"></div>
 
         <div id="input-wrapper">
-            <div class="glow-container glow-blur-3">
-                <div class="glow-spinner"></div>
-            </div>
-            <div class="glow-container glow-blur-2">
-                <div class="glow-spinner"></div>
-            </div>
-            <div class="glow-container glow-blur-1">
-                <div class="glow-spinner"></div>
-            </div>
-            <div class="glow-container" style="z-index: 10; margin: -1px; opacity: 0;">
-                <div class="glow-spinner"></div>
-            </div>
-
             <div id="input-area">
                 <input type="text" id="user-input" placeholder="Ask / Demander...">
                 <button id="send-btn">
@@ -452,11 +371,9 @@
         const toggleBtn = document.getElementById('chat-toggle');
         const closeBtn = document.getElementById('close-btn');
         const container = document.getElementById('container');
-        const glowContainers = document.querySelectorAll('.glow-container');
-
 
         const ICAL_URL = 'https://corsproxy.io/?' + encodeURIComponent('https://www.lodgify.com/3bf17184-ad17-49aa-ac49-761643c4d702.ics');
-        const API_KEY = 'AIzaSyA5RxvJAI1XcsKRTC491dlBllmrmurDvzE';
+        const API_KEY = 'AIzaSyCUT2ZiggbDX4an7IV72f-Cd2myR_YpRk8';
 
         const HOUSE_INFO = `
         You are the helpful AI for "La Maison Blanche", a rental house in Ile d'Orléans, QC.
@@ -505,35 +422,15 @@
         toggleBtn.addEventListener('click', toggleChat);
         closeBtn.addEventListener('click', toggleChat);
 
-        function toggleGlow(active) {
-            glowContainers.forEach((layer, index) => {
-                let op = 0;
-                if (active) {
-                    if (index === 3) op = 1;
-                    if (index === 2) op = 0.7;
-                    if (index === 1) op = 0.5;
-                    if (index === 0) op = 0.3;
-                }
-                layer.style.opacity = op;
-            });
-        }
-        userInput.addEventListener('focus', () => toggleGlow(true));
-        userInput.addEventListener('blur', () => { if (!userInput.value) toggleGlow(false); });
-
         function parseLinks(text) {
+            if (!text) return "";
 
             let processed = text.replace(/\/contact/g, '<a href="https://lamaisonblanche.ca/contact" class="mini-link-btn" target="_parent">Contact</a>');
             processed = processed.replace(/\/terms/g, '<a href="https://lamaisonblanche.ca/terms" class="mini-link-btn" target="_parent">Terms</a>');
             processed = processed.replace(/\/privacy/g, '<a href="https://lamaisonblanche.ca/privacy" class="mini-link-btn" target="_parent">Privacy</a>');
             processed = processed.replace(/\/cookies/g, '<a href="https://lamaisonblanche.ca/cookies" class="mini-link-btn" target="_parent">Cookies</a>');
-
-
             processed = processed.replace(/5149942080/g, '<a href="tel:5149942080" class="mini-link-btn">514-994-2080</a>');
-
-
             processed = processed.replace(/info@lamaisonblanche\.ca/g, '<a href="mailto:info@lamaisonblanche.ca" class="mini-link-btn">info@lamaisonblanche.ca</a>');
-
-
             processed = processed.replace(/whatsapp: \+1 514 994 2080/gi, '<a href="https://wa.me/15149942080" target="_blank" class="mini-link-btn">WhatsApp</a>');
 
             return processed;
@@ -544,6 +441,7 @@
         }
 
         function addMessage(text, sender) {
+            if (!text && sender === 'ai') text = "Sorry, I encountered an error. Please try again.";
             const div = document.createElement('div');
             div.className = `message ${sender}-message`;
             div.innerHTML = parseLinks(text);
@@ -556,7 +454,7 @@
             const div = document.createElement('div');
             div.className = 'typing-indicator';
             div.id = 'typing';
-            div.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+            div.innerHTML = '<span class="pulse-text">Thinking...</span>';
             chatHistory.appendChild(div);
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
@@ -608,6 +506,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
+                if (!response.ok) return null;
                 const data = await response.json();
                 return data.candidates[0].content.parts[0].text;
             } catch (e) { return null; }
@@ -694,13 +593,11 @@
             userInput.value = '';
 
             gsap.to("#input-area", { scale: 0.98, duration: 0.1, yoyo: true, repeat: 1 });
-            toggleGlow(true);
             showTyping();
 
             const response = await handleLogic(text);
             removeTyping();
             addMessage(response, 'ai');
-            toggleGlow(false);
         }
 
         userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') processInput(); });
