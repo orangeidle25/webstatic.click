@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://db.onlinewebfonts.com/c/ad025b22dc334bf7a82d60f676413d30?family=Gordita-Medium" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.8.4/plyr.css" />
+    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+
+    <style>
+        :root {
+            --plyr-color-main: #00b3ff;
+            --plyr-font-family: 'Gordita-Medium', sans-serif;
+            --plyr-video-background: rgba(0, 0, 0, 1);
+            --plyr-menu-background: rgba(255, 255, 255, 0.9);
+            --plyr-menu-color: #4a5464;
+            --plyr-control-icon-size: 18px;
+            --plyr-font-weight-regular: 400;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            box-shadow: none;
+        }
+
+        .plyr {
+            width: 100%;
+            height: 100%;
+        }
+
+        .plyr__video-wrapper {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-container">
+        <div class="plyr__video-embed" id="player">
+          <iframe
+            src="https://player.vimeo.com/video/1155822579?loop=false&amp;byline=false&amp;portrait=false&amp;title=false&amp;speed=true&amp;transparent=0&amp;gesture=media"
+            allowfullscreen
+            allowtransparency
+            allow="autoplay"
+          ></iframe>
+        </div>
+    </div>
+
+    <script src="https://cdn.plyr.io/3.8.4/plyr.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const player = new Plyr('#player', {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'quality', 'airplay', 'fullscreen'],
+                quality: {
+                    default: 720,
+                    options: [4320, 2880, 2160, 1440, 1080, 720, 576, 480, 360, 240],
+                    forced: true,
+                    onChange: (e) => updateQuality(e),
+                },
+                ads: {
+                    enabled: true, 
+                    tagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator='
+                }
+            });
+        });
+    </script>
+</body>
+</html>
